@@ -218,9 +218,48 @@
         <span>📩</span> أرسلها على إنستاغرم
       </a>
 
-      <div class="pending-notice">
+      <div class="pending-notice" id="pending-notice">
         <span>⏳</span>
         <p>طلبك في الانتظار — سيتم مراجعته والموافقة عليه في أقرب وقت</p>
+      </div>
+
+      <!-- Live status tracker -->
+      <div class="status-tracker" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; width: 100%; text-align: right;">
+        <div id="status-pending" class="status-item active" style="
+          padding: 0.8rem 1.2rem; border-radius: 12px; border: 1px dashed #f59e0b;
+          background: rgba(245, 158, 11, 0.08); display: flex; align-items: center; gap: 0.8rem;
+          transition: 0.3s;
+        ">
+          <span class="status-icon" style="font-size: 1.2rem;">⏳</span>
+          <div>
+            <div style="font-weight: 700; color: #f59e0b; font-size: 0.95rem;">طلبك قيد الانتظار</div>
+            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.2rem;">مدة الانتظار المقدرة: 42 ساعة</div>
+          </div>
+        </div>
+
+        <div id="status-approved" class="status-item" style="
+          padding: 0.8rem 1.2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
+          background: rgba(255,255,255,0.02); display: flex; align-items: center; gap: 0.8rem;
+          opacity: 0.4; transition: 0.3s;
+        ">
+          <span class="status-icon" style="font-size: 1.2rem;">✅</span>
+          <div>
+            <div style="font-weight: 700; color: #10b981; font-size: 0.95rem;">مقبول</div>
+            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.2rem;">تم قبول الطلب وجاري التنفيذ فوراً</div>
+          </div>
+        </div>
+
+        <div id="status-rejected" class="status-item" style="
+          padding: 0.8rem 1.2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
+          background: rgba(255,255,255,0.02); display: flex; align-items: center; gap: 0.8rem;
+          opacity: 0.4; transition: 0.3s;
+        ">
+          <span class="status-icon" style="font-size: 1.2rem;">❌</span>
+          <div>
+            <div style="font-weight: 700; color: #ef4444; font-size: 0.95rem;">مرفوض</div>
+            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.2rem;">تم رفض الطلب. تواصل مع الدعم الفني لمزيد من التفاصيل</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -229,6 +268,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCmqVaIZt9R7reA8mHKeBVT1jwJmaVtRWc",
@@ -240,19 +281,27 @@
       measurementId: "G-TRXZK61S65"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
+    const db       = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    window.__firebaseAuth = auth;
-    window.__googleProvider = provider;
+    window.__firebaseAuth    = auth;
+    window.__googleProvider  = provider;
     window.__signInWithPopup = signInWithPopup;
+    window.__firestore       = db;
+    window.__firestoreApi    = { collection, addDoc, query, where, onSnapshot, serverTimestamp };
 
-    // Notify app.js Firebase is ready
     window.dispatchEvent(new Event('firebase-ready'));
   </script>
 
   <script src="bg-3d.js"></script>
   <script src="request.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/follow-am/sw.js', { scope: '/follow-am/' })
+        .catch(() => navigator.serviceWorker.register('./sw.js'));
+    }
+  </script>
 </body>
 </html>
