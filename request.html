@@ -193,6 +193,15 @@
           <div class="pkg-price">23 درهم</div>
           <div class="pkg-select-btn">اختر</div>
         </div>
+
+        <!-- Special bundle inside likes tab -->
+        <div class="pkg-card special-in-likes" id="special-in-likes" onclick="showSpecialTab()" style="grid-column:1/-1;">
+          <div class="sil-badge">🔥 عرض خاص</div>
+          <div class="pkg-qty" style="font-size:1.3rem;">1500​+​500​+​50</div>
+          <div class="pkg-label">متابع + مشاهدة + إعجاب</div>
+          <div class="pkg-price" style="color:var(--accent);font-size:1.2rem;">30 درهم – <s style="color:var(--text-muted);font-size:.9rem;">80</s></div>
+          <div class="pkg-select-btn" style="background:linear-gradient(135deg,var(--accent),#f59e0b);color:#050512;border:none;">🔓 افتح الباقة</div>
+        </div>
       </div>
 
     </div>
@@ -394,6 +403,12 @@
       // Check if already paid
       if (sessionStorage.getItem(SB_KEY) === '1') unlockSpecialBundle();
     });
+
+    // Switch to special tab from any tab
+    function showSpecialTab() {
+      const specialTab = document.querySelector('.stab-special');
+      if (specialTab) specialTab.click();
+    }
   </script>
   <!-- Ads -->
   <script>(function(s){s.dataset.zone='11119905',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
