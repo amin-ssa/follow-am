@@ -64,7 +64,7 @@ document.querySelectorAll('.stab').forEach(tab => {
 });
 
 /* ─── PACKAGE SELECTION ─── */
-document.querySelectorAll('.pkg-card:not(.locked)').forEach(card => {
+document.querySelectorAll('.pkg-card:not(.locked):not(.special-in-likes)').forEach(card => {
   card.addEventListener('click', () => {
     const svc = card.dataset.service;
     const qty = +card.dataset.qty;
